@@ -22,7 +22,7 @@ def get_response(img,nutritions):
       "content": [
         {
           "type": "text",
-          "text": "given the info of the dish in the image,generate a conversation that user asking LLM about the dish info for multimodal LLM finetuning",
+          "text": "given the info of the dish in the image,generate a conversation no more than 3 rounds that user asking LLM about the dish info for multimodal LLM finetuning",
         }]},
     {"role": "user",
         "content": [{
@@ -43,15 +43,16 @@ def get_response(img,nutritions):
       messages=msg,
   )
   return response.choices[0].message.content
-path = './n5k'
-data = read_n5k_meta('./n5k/dish_metadata_cafe1.csv')
-print(len(data))
-for i in os.listdir(path):
-  if i.endswith('.jpeg'):
-    img = encode_image(os.path.join(path,i))
-    fn = i.split('_')[1]
-    did = 'dish_'+fn
-    print(did)
-    nutritions = data[data['dish_id']==did].to_dict(orient='records')[0]
-    print(nutritions)  
-    print(get_response(img,nutritions))
+if __name__ == '__main__':
+  path = './n5k'
+  data = read_n5k_meta('./n5k/dish_metadata_cafe1.csv')
+  print(len(data))
+  for i in os.listdir(path):
+    if i.endswith('.jpeg'):
+      img = encode_image(os.path.join(path,i))
+      fn = i.split('_')[1]
+      did = 'dish_'+fn
+      print(did)
+      nutritions = data[data['dish_id']==did].to_dict(orient='records')[0]
+      print(nutritions)  
+      print(get_response(img,nutritions))
