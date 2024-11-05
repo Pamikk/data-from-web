@@ -1,8 +1,9 @@
 import base64
 from openai import OpenAI
 import os
-import pandas as pd
+
 def read_n5k_meta(path):
+  import pandas as pd
   header_names = ['dish_id', 'total_calories', 'total_mass', 'total_fat', 'total_carb', 'total_protein']
   df = pd.read_csv(path,names=header_names,usecols=range(len(header_names)))
   return df
@@ -22,7 +23,7 @@ def get_response(img,nutritions):
       "content": [
         {
           "type": "text",
-          "text": "given the info of the dish in the image,generate a conversation no more than 3 rounds that user asking LLM about the dish info for multimodal LLM finetuning",
+          "text": "given the info of the dish in the image,generate a QA conversation no more than 3 rounds that user asking LLM about the dish info for multimodal LLM finetuning,odd line is user questioning and even line for assistant answers, don't add additional information like flavors but must include calories, use FAIL to indicate generation failure",
         }]},
     {"role": "user",
         "content": [{
