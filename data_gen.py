@@ -11,14 +11,15 @@ def choose_cam(path):
         if os.path.exists(path+f'_{i}.jpeg'):
             res.append(i)
     return sample(res,1)[0]
-with open(path) as f:
-    for item in f.readlines():
-        item = item.split(',')
-        nutritions = dict(zip(headers, item[:6]))
-        integredients = item[6:][1::7]
-        if len(integredients)<2:
-            pass
-        nutritions['integredients'] = integredients
-        img = encode_image(os.path.join('./n5k',item[0]+'.jpeg'))
-        get_response(img, nutritions)
-        exit()
+def conv_data(path):
+    with open(path) as f:
+        for item in f.readlines():
+            item = item.split(',')
+            nutritions = dict(zip(headers, item[:6]))
+            integredients = item[6:][1::7]
+            if len(integredients)<2:
+                pass
+            nutritions['integredients'] = integredients
+            img = encode_image(os.path.join('./n5k',item[0]+'.jpeg'))
+            get_response(img, nutritions)
+            exit()
