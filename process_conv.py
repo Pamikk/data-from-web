@@ -1,23 +1,21 @@
 import json
 import os
 import csv
-root_path = '/home/dataset/nutrition5k_dataset'
+root_path = '/home/peijiaxu/dataset/nutrition5k_dataset'
 mis_img = 0
 single = 0
-def filter_data(filter_ids,data):
-    filter_ids = filter_ids[::-1]
-    data = data[::-1]
-    for j,item in enumerate(data):
-        flag = False
-        for i,id in enumerate(filter_ids):
-            if id in item['image'][0]:
-                filter_ids.pop(i)
-                flag = True
-                break
-        if flag:
-            data.pop(j)
-        if not filter_ids:
-            break
+import re
+def filter_data(data):
+    results = []
+    for item in data:
+        image_id = os.path.split(item['image'][0])[1]
+        image_id = [int(num) for num in re.findall(r'\d+',image_id)][0]
+        if image_id >= 1573666680:
+            continue
+        else:
+            results.append(item)
+    return results
+    
     return data
 with open(os.path.join(root_path,'label.json'),'r') as f:
     data = json.load(f)
@@ -44,8 +42,8 @@ with open(os.path.join(root_path,'metadata/dish_metadata_cafe2.csv'),'r') as f:
     data = list(csv.reader(f, delimiter=','))
     ids = [item[0] for item in data]
     #print(len(ids))
-    processed = filter_data(ids,processed)
+    processed = filter_data(processed)
     print(single,mis_img)
-    #print(len(processed))
-    #json.dump(processed,open(os.path.join(root_path,'newlabel.json'),'w'))
+    print(len(processed))
+    json.dump(processed,open(os.path.join(root_path,'newlabel.json'),'w'))
     
